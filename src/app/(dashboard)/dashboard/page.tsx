@@ -2,6 +2,7 @@
 
 
 
+import BreadCrumb from "@/components/breadcrumb";
 import ThemeToggle from "@/components/layout/theme-toggle/theme-toggle";
 import { Button } from "@/components/ui/button"
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -13,7 +14,7 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (session?.expires_at) {
-                        
+
             var dateString = session.expires_at;    
 
             var dateExp = new Date(dateString);
@@ -28,8 +29,6 @@ export default function DashboardPage() {
     return (
         <>
             <h1>Dashboard</h1>
-            <Button onClick={() => signOut()}>Logout</Button>   
-            <ThemeToggle />
         </>
     )
 }

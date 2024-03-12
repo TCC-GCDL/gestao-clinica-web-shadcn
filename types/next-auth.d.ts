@@ -7,7 +7,7 @@ declare module "next-auth" {
     usuario: {
       id: number;
       email: string;
-      nome: string;
+      firstName: string;
     };
   }
 }
