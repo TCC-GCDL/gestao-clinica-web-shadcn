@@ -23,21 +23,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
+
         <Header />
         <div className="flex h-screen overflow-hidden">
           <Sidebar />
           <main className="w-full pt-16">           
               {children}           
           </main>
-
         </div>
-      </ThemeProvider>
+   
 
     </>
   )
