@@ -4,13 +4,26 @@
 
 import ThemeToggle from "@/components/layout/theme-toggle/theme-toggle";
 import { Button } from "@/components/ui/button"
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function DashboardPage() {
 
     const { data: session } = useSession();
 
-    console.log(session);
+    useEffect(() => {
+        if (session?.expires_at) {
+                        
+            var dateString = session.expires_at;    
+
+            var dateExp = new Date(dateString);
+    
+            if (Number(dateExp) < Date.now()) {
+                signOut();
+            }
+        }
+    }, [session]);
+
     
     return (
         <>
