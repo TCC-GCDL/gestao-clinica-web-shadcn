@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth-options";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { columns } from "@/components/tables/paciente/columns";
 import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
 
 type paramsProps = {
     searchParams: {
@@ -45,15 +46,18 @@ export default async function PacientesPage({ searchParams }: paramsProps) {
     const pageCount = Math.ceil(totalUsers / pageLimit);
 
     return (
-        <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
-            <BreadCrumb items={[{ title: "Pacientes", link: "/dashboard/pacientes" }]} />
-            <div className="mb-8">
-                <Heading
-                    title={`Pacientes (${totalUsers})`}
-                    description="Aqui você pode visualizar todos os pacientes cadastrados no sistema."
-                />
+        <>
+            <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
+                <BreadCrumb items={[{ title: "Pacientes", link: "/dashboard/pacientes" }]} />
+                <div className="flex items-start justify-between">
+                    <Heading
+                        title={`Pacientes (${totalUsers})`}
+                        description="Aqui você pode visualizar todos os pacientes cadastrados no sistema."
+                    />
+                </div>
+                <Separator />
+                <DataTablePaciente columns={columns} data={data} searchKey={"firstName"} pageNo={page} totalUsers={totalUsers} pageCount={pageCount} />
             </div>
-            <DataTablePaciente columns={columns} data={data} searchKey={"firstName"} pageNo={page} totalUsers={totalUsers} pageCount={pageCount} />
-        </div>
+        </>
     )
 }

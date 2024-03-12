@@ -27,7 +27,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <Header />
         <div className="flex h-screen overflow-hidden">
           <Sidebar />
-          <main className="w-full pt-16">           
+          <main className="w-full pt-12">           
               {children}           
           </main>
         </div>
