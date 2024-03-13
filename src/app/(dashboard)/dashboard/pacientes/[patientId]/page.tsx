@@ -1,10 +1,9 @@
 import { getServerSession } from "next-auth";
 import BreadCrumb from "@/components/breadcrumb";
-import CreatePatientForm from "@/components/forms/create-patient-form";
+import PatientForm from "@/components/forms/patient-form";
 import { Heading } from "@/components/ui/heading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { authOptions } from "@/lib/auth-options";
-import { get } from "http";
 
 async function getPatient(patientId: string) {
   try {
@@ -50,7 +49,7 @@ export default async function Page({ params }: { params: { patientId: string } }
             description={description}
           />
         </div>
-        <CreatePatientForm editPage={patient} />
+        <PatientForm editPage={patient} />
       </div>
     </ScrollArea>
   );

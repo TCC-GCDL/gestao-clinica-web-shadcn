@@ -1,7 +1,7 @@
 import { NavItem } from "../../types";
 
 
-export type User = {
+export type Usuario = {
   id: number;
   firstName: string;
   sobrenome: string;

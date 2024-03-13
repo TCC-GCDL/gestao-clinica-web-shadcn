@@ -11,12 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export const formSchema = z.object({
     firstName: z.string().min(3),
     lastName: z.string().min(3),
-    phone: z.string().max(11).refine(validator.isMobilePhone),
+    phone: z.string().min(8).max(12),
     city: z.string(),
     cpf: z.string().refine((cpf: string) => {
         if (typeof cpf !== "string") return false;
@@ -33,11 +32,11 @@ export const formSchema = z.object({
     zipCode: z.string(),
     street: z.string(),
     number: z.string(),
-    complement: z.string(),
-    neighborhood: z.string(),
+    complement: z.string().min(1),
+    neighborhood: z.string().min(1),
     state: z.string(),
     // status: z.enum(["ATIVO", "INATIVO"]),
-    renach: z.string(),
+    renach: z.string().min(1),
     categoryCNH: z.enum(["A", "B", "C", "D", "E", "ACC"]),
     maritalStatus: z.enum(["SOLTEIRO", "CASADO", "SEPARADO", "DIVORCIADO", "VIUVO"]),
     email: z.string().email(),
@@ -46,7 +45,7 @@ export const formSchema = z.object({
 
 type PatientFormValues = z.infer<typeof formSchema>;
 
-export default function CreatePatientForm({ editPage }: { editPage?: any}) {   
+export default function UserForm({ editPage }: { editPage?: any}) {   
 
     const { data: session } = useSession();
     const router = useRouter();
