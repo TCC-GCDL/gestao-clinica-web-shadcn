@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export const formSchema = z.object({
     firstName: z.string().min(3),
@@ -27,7 +28,7 @@ export const formSchema = z.object({
         };
         return rest(10) === cpfDigits[9] && rest(11) === cpfDigits[10];
     }, "Digite um cpf válido."),
-    gender: z.enum(["masculino", "feminino", "outro"]),
+    gender: z.enum(["MASCULINO", "FEMININO", "OUTRO"]),
     dateOfBirth: z.string(),
     zipCode: z.string(),
     street: z.string(),
@@ -45,20 +46,23 @@ export const formSchema = z.object({
 
 type PatientFormValues = z.infer<typeof formSchema>;
 
-export default function CreatePatientForm() {
+export default function CreatePatientForm({ editPage }: { editPage?: any}) {   
 
     const { data: session } = useSession();
     const router = useRouter();
 
+    console.log(editPage);
+    
+
     const form = useForm<PatientFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
+        defaultValues: editPage ? editPage : {
             firstName: "",
             lastName: "",
             phone: "",
             city: "",
             cpf: "",
-            gender: "masculino",
+            gender: "MASCULINO",
             dateOfBirth: "",
             zipCode: "",
             street: "",
@@ -73,7 +77,7 @@ export default function CreatePatientForm() {
             email: "",
             rg: "",
         },
-    });
+    });    
 
     const onSubmit = async (data: PatientFormValues) => {
         await fetch("http://localhost:8081/patient", {
@@ -282,13 +286,16 @@ export default function CreatePatientForm() {
                                 <FormItem>
                                     <FormLabel>Gênero</FormLabel>
                                     <FormControl>
-                                        <Select>
+                                        <Select                                            
+                                            onValueChange={field.onChange}
+                                            value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecione o gênero" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="masculino">Masculino</SelectItem>
-                                                <SelectItem value="feminino">Feminino</SelectItem>
+                                                <SelectItem value="MASCULINO">Masculino</SelectItem>
+                                                <SelectItem value="FEMININO">Feminino</SelectItem>
+                                                <SelectItem value="OUTRO">Outro</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -328,7 +335,7 @@ export default function CreatePatientForm() {
                                 <FormItem>
                                     <FormLabel>Categoria CNH</FormLabel>
                                     <FormControl>
-                                        <Select>
+                                        <Select value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecione a categoria" />
                                             </SelectTrigger>
@@ -352,7 +359,7 @@ export default function CreatePatientForm() {
                                 <FormItem>
                                     <FormLabel>Estado civil</FormLabel>
                                     <FormControl>
-                                        <Select>
+                                        <Select value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecione o estado civil" />
                                             </SelectTrigger>

@@ -25,11 +25,13 @@ async function getData(page: number, pageLimit: number, name: string | null): Pr
             'Authorization': 'Bearer ' + session?.token
         }
     })
-
+    
     return response.json().then((data) => {
         return data;
     });
+    
 }
+
 
 export default async function PacientesPage({ searchParams }: paramsProps) {
     const page = Number(searchParams.page) || 1;
