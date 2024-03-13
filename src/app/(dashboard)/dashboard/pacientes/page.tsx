@@ -6,6 +6,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { columns } from "@/components/tables/paciente/columns";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 type paramsProps = {
     searchParams: {

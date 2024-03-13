@@ -57,5 +57,11 @@ export const navItems: NavItem[] = [
     href: "/dashboard/pacientes",
     icon: "employee",
     label: "paciente",
+  },
+  {
+    title: "Consultas",
+    href: "/dashboard/pacientes/novo",
+    icon: "user",
+    label: "consulta",
   }
 ];

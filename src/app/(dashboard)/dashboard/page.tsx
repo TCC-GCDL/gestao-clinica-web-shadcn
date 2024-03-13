@@ -1,11 +1,6 @@
 'use client';
 
-
-
-import BreadCrumb from "@/components/breadcrumb";
-import ThemeToggle from "@/components/layout/theme-toggle/theme-toggle";
-import { Button } from "@/components/ui/button"
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export default function DashboardPage() {
