@@ -36,7 +36,7 @@ export const formSchema = z.object({
     complement: z.string(),
     neighborhood: z.string(),
     state: z.string(),
-    status: z.enum(["ATIVO", "INATIVO"]),
+    // status: z.enum(["ATIVO", "INATIVO"]),
     renach: z.string(),
     categoryCNH: z.enum(["A", "B", "C", "D", "E", "ACC"]),
     maritalStatus: z.enum(["SOLTEIRO", "CASADO", "SEPARADO", "DIVORCIADO", "VIUVO"]),
@@ -70,18 +70,26 @@ export default function CreatePatientForm({ editPage }: { editPage?: any}) {
             complement: "",
             neighborhood: "",
             state: "",
-            status: "ATIVO",
+            // status: "ATIVO",
             renach: "",
             categoryCNH: "A",
             maritalStatus: "SOLTEIRO",
             email: "",
             rg: "",
         },
-    });    
+    });   
+    
+    
+
+
 
     const onSubmit = async (data: PatientFormValues) => {
-        await fetch("http://localhost:8081/patient", {
-            method: "POST",
+        const url = editPage ? `http://localhost:8081/patient/${editPage.id}` : "http://localhost:8081/patient";
+
+        const method = editPage ? "PUT" : "POST";
+
+        await fetch(url, {
+            method: method,
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + session?.token
@@ -89,7 +97,8 @@ export default function CreatePatientForm({ editPage }: { editPage?: any}) {
             body: JSON.stringify(data),
         }).then((response) => {
             if(response.ok){
-                toast.success("Paciente cadastrado com sucesso", {
+                const successMessage = editPage ? "Paciente atualizado com sucesso" : "Paciente cadastrado com sucesso";
+                toast.success(successMessage, {
                     position: "top-right",                   
                 });
 
@@ -105,12 +114,9 @@ export default function CreatePatientForm({ editPage }: { editPage?: any}) {
             
         }).catch((error) => {
             console.log(error);
-        })
-
-
+        });
 
         form.reset();
-
     }
 
     const buscarCep = async (cep: string) => {
@@ -405,8 +411,9 @@ export default function CreatePatientForm({ editPage }: { editPage?: any}) {
 
 
                     <Button className="ml-auto" type="submit">
-                        Cadastrar
+                        {editPage ? "Atualizar" : "Cadastrar"}
                     </Button>
+                    
                 </form>
             </Form>
         </>
