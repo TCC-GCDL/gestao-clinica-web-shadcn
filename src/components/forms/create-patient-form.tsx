@@ -7,18 +7,14 @@ import { Button } from "../ui/button";
 import { z } from "zod";
 import validator from "validator";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const formSchema = z.object({
-    firstName: z
-        .string({
-            required_error: "O nome é obrigatório",
-            invalid_type_error: "O nome deve ser uma string",
-        }),
-    lastName: z
-        .string({
-            required_error: "O sobrenome é obrigatório",
-            invalid_type_error: "O sobrenome deve ser uma string",
-        }),
+    firstName: z.string().min(3),
+    lastName: z.string().min(3),
     phone: z.string().max(11).refine(validator.isMobilePhone),
     city: z.string(),
     cpf: z.string().refine((cpf: string) => {
@@ -39,18 +35,20 @@ export const formSchema = z.object({
     complement: z.string(),
     neighborhood: z.string(),
     state: z.string(),
-    email: z.string().email(),
-    password: z.string().min(6),
-    role: z.enum(["ROLE_ATENDENTE", "ROLE_ADMINISTRADOR"]),
     status: z.enum(["ATIVO", "INATIVO"]),
     renach: z.string(),
     categoryCNH: z.enum(["A", "B", "C", "D", "E", "ACC"]),
     maritalStatus: z.enum(["SOLTEIRO", "CASADO", "SEPARADO", "DIVORCIADO", "VIUVO"]),
+    email: z.string().email(),
+    rg: z.string(),
 });
 
 type PatientFormValues = z.infer<typeof formSchema>;
 
 export default function CreatePatientForm() {
+
+    const { data: session } = useSession();
+    const router = useRouter();
 
     const form = useForm<PatientFormValues>({
         resolver: zodResolver(formSchema),
@@ -68,51 +66,339 @@ export default function CreatePatientForm() {
             complement: "",
             neighborhood: "",
             state: "",
-            email: "",
-            password: "",
-            role: "ROLE_ATENDENTE",
             status: "ATIVO",
             renach: "",
             categoryCNH: "A",
             maritalStatus: "SOLTEIRO",
+            email: "",
+            rg: "",
         },
-      });
+    });
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const onSubmit = async (data: PatientFormValues) => {
+        await fetch("http://localhost:8081/patient", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + session?.token
+            },
+            body: JSON.stringify(data),
+        }).then((response) => {
+            if(response.ok){
+                toast.success("Paciente cadastrado com sucesso", {
+                    position: "top-right",                   
+                });
+
+                router.push('/dashboard/pacientes');
+            } else {
+                const data = response.json();
+                const userMessage = data.then((data) => data.userMessage)
+                toast.error(userMessage, {                    
+                    position: "top-right",        
+                });
+            }
+
+            
+        }).catch((error) => {
+            console.log(error);
+        })
+
+
+
+        form.reset();
+
     }
+
+    const buscarCep = async (cep: string) => {
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await response.json();
+
+            form.setValue("neighborhood", data.bairro);
+            form.setValue("state", data.uf);
+            form.setValue("city", data.localidade);
+            form.setValue("street", data.logradouro);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleCepChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const cep = event.target.value;
+        buscarCep(cep);
+    };
     return (
         <>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="exemplo@email.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Senha</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="********" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button className="ml-auto w-full" type="submit">
-                        Entrar
+                    <div className="md:grid md:grid-cols-3 gap-8">
+                        <FormField
+                            control={form.control}
+                            name="firstName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nome</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Digite o nome" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="lastName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Sobrenome</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o sobrenome" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Telefone</FormLabel>
+                                    <FormControl>
+                                        <Input type="tel" placeholder="Digite o telefone" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="zipCode"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>CEP</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o CEP" {...field} onBlur={handleCepChange} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="city"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Cidade</FormLabel>
+                                    <FormControl>
+                                        <Input disabled={true} type="text" placeholder="Digite a cidade" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="street"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Rua</FormLabel>
+                                    <FormControl>
+                                        <Input disabled={true} type="text" placeholder="Digite a rua" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="neighborhood"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Bairro</FormLabel>
+                                    <FormControl>
+                                        <Input disabled={true} type="text" placeholder="Digite o bairro" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="state"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Estado</FormLabel>
+                                    <FormControl>
+                                        <Input disabled={true} type="text" placeholder="Digite o estado" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="number"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Número</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o número" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="complement"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Complemento</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o complemento" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="cpf"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>CPF</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o CPF" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="gender"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Gênero</FormLabel>
+                                    <FormControl>
+                                        <Select>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione o gênero" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="masculino">Masculino</SelectItem>
+                                                <SelectItem value="feminino">Feminino</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="dateOfBirth"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Data de nascimento</FormLabel>
+                                    <FormControl>
+                                        <Input type="date" placeholder="Digite a data de nascimento" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="renach"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Renach</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o renach" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="categoryCNH"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Categoria CNH</FormLabel>
+                                    <FormControl>
+                                        <Select>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione a categoria" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="A">A</SelectItem>
+                                                <SelectItem value="B">B</SelectItem>
+                                                <SelectItem value="C">C</SelectItem>
+                                                <SelectItem value="D">D</SelectItem>
+                                                <SelectItem value="E">E</SelectItem>
+                                                <SelectItem value="ACC">ACC</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="maritalStatus"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Estado civil</FormLabel>
+                                    <FormControl>
+                                        <Select>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione o estado civil" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="SOLTEIRO">Solteiro</SelectItem>
+                                                <SelectItem value="CASADO">Casado</SelectItem>
+                                                <SelectItem value="SEPARADO">Separado</SelectItem>
+                                                <SelectItem value="DIVORCIADO">Divorciado</SelectItem>
+                                                <SelectItem value="VIUVO">Viúvo</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" placeholder="Digite o email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="rg"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>RG</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Digite o RG" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+
+                    <Button className="ml-auto" type="submit">
+                        Cadastrar
                     </Button>
                 </form>
             </Form>
