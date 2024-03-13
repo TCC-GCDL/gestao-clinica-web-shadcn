@@ -53,7 +53,7 @@ export default async function UsuariosPage({ searchParams }: paramsProps) {
                 <div className="flex items-start justify-between">
                     <Heading
                         title={`Usuários (${totalUsers})`}
-                        description="Aqui você pode visualizar todos os pacientes cadastrados no sistema."
+                        description="Aqui você pode visualizar todos os usuários cadastrados no sistema."
                     />
                 </div>
                 <Separator />

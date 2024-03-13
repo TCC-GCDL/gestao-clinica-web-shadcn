@@ -42,6 +42,14 @@ export const columns: ColumnDef<Usuario>[] = [
     accessorKey: "email",
     header: "EMAIL",
   },
+  {
+    accessorKey: "role",
+    header: "CARGO",
+    cell: ({ getValue }) => {
+      const role = getValue() as string;
+      return role === "ROLE_ADMINISTRADOR" ? "Administrador" : "Usuário";
+    }
+  },
   // formatar telefone para (99) 99999-9999
   {
     accessorKey: "phone",

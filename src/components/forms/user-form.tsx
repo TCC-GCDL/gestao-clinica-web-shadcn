@@ -36,14 +36,11 @@ export const formSchema = z.object({
     neighborhood: z.string().min(1),
     state: z.string(),
     // status: z.enum(["ATIVO", "INATIVO"]),
-    renach: z.string().min(1),
-    categoryCNH: z.enum(["A", "B", "C", "D", "E", "ACC"]),
-    maritalStatus: z.enum(["SOLTEIRO", "CASADO", "SEPARADO", "DIVORCIADO", "VIUVO"]),
     email: z.string().email(),
-    rg: z.string(),
+    password: z.string().min(6),
 });
 
-type PatientFormValues = z.infer<typeof formSchema>;
+type UserFormValues = z.infer<typeof formSchema>;
 
 export default function UserForm({ editPage }: { editPage?: any}) {   
 
@@ -53,7 +50,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
     console.log(editPage);
     
 
-    const form = useForm<PatientFormValues>({
+    const form = useForm<UserFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: editPage ? editPage : {
             firstName: "",
@@ -70,11 +67,8 @@ export default function UserForm({ editPage }: { editPage?: any}) {
             neighborhood: "",
             state: "",
             // status: "ATIVO",
-            renach: "",
-            categoryCNH: "A",
-            maritalStatus: "SOLTEIRO",
             email: "",
-            rg: "",
+
         },
     });   
     
@@ -82,8 +76,8 @@ export default function UserForm({ editPage }: { editPage?: any}) {
 
 
 
-    const onSubmit = async (data: PatientFormValues) => {
-        const url = editPage ? `http://localhost:8081/patient/${editPage.id}` : "http://localhost:8081/patient";
+    const onSubmit = async (data: UserFormValues) => {
+        const url = editPage ? `http://localhost:8081/users/${editPage.id}` : "http://localhost:8081/auth";
 
         const method = editPage ? "PUT" : "POST";
 
@@ -96,12 +90,12 @@ export default function UserForm({ editPage }: { editPage?: any}) {
             body: JSON.stringify(data),
         }).then((response) => {
             if(response.ok){
-                const successMessage = editPage ? "Paciente atualizado com sucesso" : "Paciente cadastrado com sucesso";
+                const successMessage = editPage ? "Usuário atualizado com sucesso" : "Usuário cadastrado com sucesso";
                 toast.success(successMessage, {
                     position: "top-right",                   
                 });
 
-                router.push('/dashboard/pacientes');
+                router.push('/dashboard/usuarios');
             } else {
                 const data = response.json();
                 const userMessage = data.then((data) => data.userMessage)
@@ -319,67 +313,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="renach"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Renach</FormLabel>
-                                    <FormControl>
-                                        <Input type="text" placeholder="Digite o renach" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="categoryCNH"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Categoria CNH</FormLabel>
-                                    <FormControl>
-                                        <Select value={field.value}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione a categoria" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="A">A</SelectItem>
-                                                <SelectItem value="B">B</SelectItem>
-                                                <SelectItem value="C">C</SelectItem>
-                                                <SelectItem value="D">D</SelectItem>
-                                                <SelectItem value="E">E</SelectItem>
-                                                <SelectItem value="ACC">ACC</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="maritalStatus"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Estado civil</FormLabel>
-                                    <FormControl>
-                                        <Select value={field.value}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione o estado civil" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="SOLTEIRO">Solteiro</SelectItem>
-                                                <SelectItem value="CASADO">Casado</SelectItem>
-                                                <SelectItem value="SEPARADO">Separado</SelectItem>
-                                                <SelectItem value="DIVORCIADO">Divorciado</SelectItem>
-                                                <SelectItem value="VIUVO">Viúvo</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+                        />                   
                         <FormField
                             control={form.control}
                             name="email"
@@ -395,17 +329,18 @@ export default function UserForm({ editPage }: { editPage?: any}) {
                         />
                         <FormField
                             control={form.control}
-                            name="rg"
+                            name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>RG</FormLabel>
+                                    <FormLabel>Senha</FormLabel>
                                     <FormControl>
-                                        <Input type="text" placeholder="Digite o RG" {...field} />
+                                        <Input type="password" placeholder="Digite a senha" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                     </div>
 
 
