@@ -30,7 +30,10 @@ async function getPatient(patientId: string) {
 export default async function Page({ params }: { params: { patientId: string } }) {
 
   let patient;
-  await getPatient(params.patientId).then((data) => patient = data);
+  if (params.patientId && params.patientId !== "cadastrar") {
+    patient = await getPatient(params.patientId);
+  }
+  
 
   const title = patient ? "Edição de Pacientes" : "Cadastro de Pacientes";
   const description = patient ? "Edite os dados do paciente" : "Cadastre um novo paciente"; 

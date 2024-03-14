@@ -68,7 +68,6 @@ export default function UserForm({ editPage }: { editPage?: any}) {
             state: "",
             // status: "ATIVO",
             email: "",
-
         },
     });   
     
@@ -327,7 +326,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
                                 </FormItem>
                             )}
                         />
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="password"
                             render={({ field }) => (
@@ -339,7 +338,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
 
                     </div>
 
