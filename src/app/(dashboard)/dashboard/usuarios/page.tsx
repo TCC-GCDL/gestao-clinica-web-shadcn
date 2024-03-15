@@ -36,15 +36,26 @@ export default async function UsuariosPage({ searchParams }: paramsProps) {
     const pageLimit = Number(searchParams.limit) || 10;
     const name = Array.isArray(searchParams.search) ? searchParams.search[0] : searchParams.search || null;
 
-    const data = await getData(page, pageLimit, name).then((data) => {
-        return data.content;
-    });
+    let data = [];
+    let totalUsers = 0;
+    let pageCount = 0;
+    try {
+        data = await getData(page, pageLimit, name).then((data) => {
+            return data.content;
+        });
 
-    const totalUsers = await getData(page, pageLimit, name).then((data) => {
-        return data.totalElements;
-    })
+        totalUsers = await getData(page, pageLimit, name).then((data) => {
+            return data.totalElements;
+        });
 
-    const pageCount = Math.ceil(totalUsers / pageLimit);
+        pageCount = Math.ceil(totalUsers / pageLimit);
+    } catch (error) {
+        return (
+            <div>
+                <p>Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.</p>
+            </div>
+        );
+    }
 
     return (
         <>

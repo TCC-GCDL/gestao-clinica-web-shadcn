@@ -35,11 +35,11 @@ export default async function Page({ params }: { params: { medicoId: string } })
     doctor = await getDoctor(params.medicoId);
   }
 
-  const title = doctor ? "Edição de Usuários" : "Cadastro de Usuários";
-  const description = doctor ? "Edite os dados do usuário" : "Cadastre um novo usuário"; 
+  const title = doctor ? "Edição de médicos" : "Cadastro de médicos";
+  const description = doctor ? "Edite os dados" : "Cadastre um novo médico"; 
   
   const breadcrumbItems = [
-    { title: doctor ? "Editar" : "Cadastrar", link: `/dashboard/usuarios/${params.medicoId}` },
+    { title: doctor ? "Editar" : "Cadastrar", link: `/dashboard/medicos/${params.medicoId}` },
   ];  
 
   return (
