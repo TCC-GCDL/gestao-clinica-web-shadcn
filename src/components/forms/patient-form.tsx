@@ -16,7 +16,7 @@ export const formSchema = z.object({
     firstName: z.string().min(3),
     lastName: z.string().min(3),
     phone: z.string().min(8).max(12),
-    city: z.string(),
+    city: z.string().optional(),
     cpf: z.string().refine((cpf: string) => {
         if (typeof cpf !== "string") return false;
         cpf = cpf.replace(/[^\d]+/g, "");
@@ -27,20 +27,20 @@ export const formSchema = z.object({
         };
         return rest(10) === cpfDigits[9] && rest(11) === cpfDigits[10];
     }, "Digite um cpf válido."),
-    gender: z.enum(["MASCULINO", "FEMININO", "OUTRO"]),
-    dateOfBirth: z.string(),
-    zipCode: z.string(),
-    street: z.string(),
-    number: z.string(),
-    complement: z.string().min(1),
-    neighborhood: z.string().min(1),
-    state: z.string(),
+    gender: z.enum(["MASCULINO", "FEMININO", "OUTRO"]).optional(),
+    dateOfBirth: z.string().optional(),
+    zipCode: z.string().optional(),
+    street: z.string().optional(),
+    number: z.string().optional(),
+    complement: z.string().min(1).optional(),
+    neighborhood: z.string().min(1).optional(),
+    state: z.string().optional(),
     // status: z.enum(["ATIVO", "INATIVO"]),
     renach: z.string().min(1),
-    categoryCNH: z.enum(["A", "B", "C", "D", "E", "ACC"]),
-    maritalStatus: z.enum(["SOLTEIRO", "CASADO", "SEPARADO", "DIVORCIADO", "VIUVO"]),
+    categoryCNH: z.enum(["A", "B", "C", "D", "E", "ACC"]).optional(),
+    maritalStatus: z.enum(["SOLTEIRO", "CASADO", "SEPARADO", "DIVORCIADO", "VIUVO"]).optional(),
     email: z.string().email(),
-    rg: z.string(),
+    rg: z.string().optional(),
 });
 
 type PatientFormValues = z.infer<typeof formSchema>;
@@ -83,7 +83,7 @@ export default function PatientForm({ editPage }: { editPage?: any}) {
 
 
     const onSubmit = async (data: PatientFormValues) => {
-        const url = editPage ? `https://gestao-clinica-api-production.up.railway.app/patient/${editPage.id}` : "https://gestao-clinica-api-production.up.railway.app/patient";
+        const url = editPage ? `http://localhost:8081/patient/${editPage.id}` : "http://localhost:8081/patient";
 
         const method = editPage ? "PUT" : "POST";
 

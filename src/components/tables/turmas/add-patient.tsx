@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Turma } from "@/constants/data";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { ArrowBigDownDash, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ interface CellActionProps {
     data: Turma;
 }
 
-export const CellActionAddPatient = () => {
+export const CellActionAddPatient = ({data}: CellActionProps) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const router = useRouter();
@@ -32,8 +32,10 @@ export const CellActionAddPatient = () => {
                 onClose={() => setOpen(false)}
                 onConfirm={onConfirm}
                 loading={loading}
+                data={data}
             />
-            <Button onClick={() => setOpen(true)}>Adicionar paciente</Button>
+            <Button size={"sm"} variant={"secondary"} onClick={() => setOpen(true)}>Adicionar paciente</Button>
+            {/* <ArrowBigDownDash onClick={() => setOpen(true)}  size={24} /> */}
         </>
     );
 };

@@ -19,7 +19,7 @@ type paramsProps = {
 async function getData(page: number, pageLimit: number, name: string | null): Promise<any> {
     const session = await getServerSession(authOptions);
 
-    const response = await fetch(`https://gestao-clinica-api-production.up.railway.app/group-medical-care?page=${page - 1}&limit=${pageLimit} ` + (name ? `&name=${name}` : ""), {
+    const response = await fetch(`http://localhost:8081/group-medical-care?page=${page - 1}&limit=${pageLimit} ` + (name ? `&name=${name}` : ""), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -58,8 +58,8 @@ export default async function TurmasPage({ searchParams }: paramsProps) {
                 <BreadCrumb items={[{ title: "Pacientes", link: "/dashboard/pacientes" }]} />
                 <div className="flex items-start justify-between">
                     <Heading
-                        title={`Pacientes (${totalUsers})`}
-                        description="Aqui você pode visualizar todos os pacientes cadastrados no sistema."
+                        title={`Turmas (${totalUsers})`}
+                        description="Aqui você pode visualizar todas as turmas cadastradas no sistema."
                     />
                 </div>
                 <Separator />

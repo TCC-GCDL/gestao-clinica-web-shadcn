@@ -6,13 +6,28 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useSession } from "next-auth/react";
+import { authOptions } from "@/lib/auth-options";
+import { getServerSession } from "next-auth";
+import { ScrollArea } from "../ui/scroll-area";
+import { Turma } from "@/constants/data";
+import { toast } from "sonner";
+import { on } from "events";
 
+interface CellActionProps {
+  data: Turma;
+}
 
 interface AlertModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
   loading: boolean;
+  data: Turma;
+}
+
+export const formSchema = {
+
 }
 
 export const AddPatientModalModal: React.FC<AlertModalProps> = ({
@@ -20,20 +35,97 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
   onClose,
   onConfirm,
   loading,
+  data
 }) => {
   const [isMounted, setIsMounted] = useState(false);
-  const form = useForm()
+  const form = useForm();
+  const { data: session } = useSession();
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const getPatients = async () => {
+    await fetch('http://localhost:8081/patient', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session?.token
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro ao obter pacientes');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setPatients(data.content);
+        console.log(data.content);
+
+
+
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
+  };
+
+  useEffect(() => {
+    if (session) {
+      getPatients();
+    }
+  }, [session]);
+
   if (!isMounted) {
     return null;
   }
 
-  const onSubmit = () => {
-    console.log("submit");
+  const handlePatientChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    await fetch(`http://localhost:8081/patient?` + (event.target.value ? `&name=${event.target.value}` : ""), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session?.token
+
+      }
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Erro ao obter pacientes');
+      }
+      return response.json();
+    })
+      .then(data => {
+        setPatients(data.content);
+        console.log(data.content);
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
+  };
+
+  const addPatient = async (patient: any) => {
+    await fetch(`http://localhost:8081/group-medical-care/${data.id}/add-patient/${patient.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session?.token
+      },
+      body: JSON.stringify(patient)
+    }).then(response => {
+      if (!response.ok) {
+        toast.error(response.json().then(data => data.userMessage), {
+          position: 'top-right',
+        });        
+      } else {
+        toast.success('Paciente adicionado com sucesso', {
+          position: 'top-right',
+        });
+        onClose();
+      }   
+    })
+    
   }
 
   return (
@@ -43,51 +135,24 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="gap-8">
-              <FormField
-                control={form.control}
-                name="specialty"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Especialidade</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Cardiologia">Cardiologia</SelectItem>
-                          <SelectItem value="Dermatologia">Dermatologia</SelectItem>
-                          <SelectItem value="Ginecologia">Ginecologia</SelectItem>
-                          <SelectItem value="Neurologia">Neurologia</SelectItem>
-                          <SelectItem value="Ortopedia">Ortopedia</SelectItem>
-                          <SelectItem value="Pediatria">Pediatria</SelectItem>
-                          <SelectItem value="Psiquiatria">Psiquiatria</SelectItem>
-                          <SelectItem value="Urologia">Urologia</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </form>
-        </Form>
+      <div className="mb-4">
+        <div className="mt-2">
+        <Input type="text" placeholder="Digite o nome do paciente"  onChange={handlePatientChange} />
+        </div>
       </div>
-      <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-        <Button disabled={loading} variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button disabled={loading} variant="destructive" onClick={onConfirm}>
-          Continue
-        </Button>
-      </div>
+      <ScrollArea className="h-72 w-full rounded-md border">
+        <div className="space-y-2 p-2">
+          
+          {patients && patients.map((patient: any) => {
+            return (
+                <div className="flex justify-between" key={patient.id}>
+                  <p>{patient.firstName + " " + patient.lastName}</p>
+                  <Button variant="outline" onClick={() => addPatient(patient)}>Adicionar</Button>
+                </div>      
+            )
+          })}
+        </div>
+      </ScrollArea>
     </Modal>
   );
 };

@@ -30,19 +30,20 @@ export const columns: ColumnDef<Turma>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
-  
+  },  
   {
     accessorKey: "name",
     header: "NOME",
   },
   {
-    accessorKey: "teste",
-    header: "Teste",
-    cell: ({ row }) => <CellActionAddPatient />,
+    accessorKey: "add-patient",
+    header: () => <div className="text-right">ADICIONAR PACIENTE</div>,
+    cell: ({ row }) => <div className="text-right"><CellActionAddPatient data={row.original} /></div>,
+    
   },
   {
     id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
+    header: () => <div className="text-right mr-1">AÇÕES</div>,
+    cell: ({ row }) => <div  className="text-right mr-1"><CellAction data={row.original} /></div>,
   },
 ]

@@ -160,7 +160,7 @@ export function DataTableTurmas<TData, TValue>({
         className="w-full md:max-w-sm"
       />
       <Button asChild>
-        <Link href="/dashboard/pacientes/cadastrar">Adicionar paciente</Link>
+        <Link href="/dashboard/turmas/cadastrar">Adicionar turma</Link>
       </Button>
       </div>
       <ScrollArea className="rounded-md border h-[calc(80vh-220px)] overflow-hidden">

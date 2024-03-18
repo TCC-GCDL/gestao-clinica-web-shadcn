@@ -76,7 +76,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
 
 
     const onSubmit = async (data: UserFormValues) => {
-        const url = editPage ? `https://gestao-clinica-api-production.up.railway.app/users/${editPage.id}` : "https://gestao-clinica-api-production.up.railway.app/auth";
+        const url = editPage ? `http://localhost:8081/users/${editPage.id}` : "http://localhost:8081/auth";
 
         const method = editPage ? "PUT" : "POST";
 
