@@ -3,28 +3,47 @@ import { Table, TableCaption,TableHeader, TableRow, TableHead, TableBody, TableC
 
 export interface GroupParams {
     group: {
+        id: string;
         name: string;
-        hour: string;
-        doctor: {
-            name: string;
-        };
+        date: string;
+        doctors: [
+            {
+                id: string;
+                name: string;
+            }
+        ]
         patients: {
             name: string;
             phone: string;
             email: string;
         }[];
+        user: {
+            id: string;
+            name: string;
+        };
     }
 
 }
 
 export function CardGroup({group}: GroupParams) {
+    function converterData(dataString: string): string {
+        const data = new Date(dataString);
+        const dia = data.getDate();
+        const mes = data.getMonth() + 1; // Mês é baseado em zero
+        const ano = data.getFullYear();
+    
+        // Formatar a data para "dd/MM/yyyy"
+        const dataFormatada = `${dia < 10 ? '0' + dia : dia}/${mes < 10 ? '0' + mes : mes}/${ano}`;
+    
+        return dataFormatada;
+    }
     return (
         <Card>
             <CardHeader>
                 <CardTitle>{group.name}</CardTitle>
                 <CardDescription>                    
-                    {/* <p>Horario: {group.hour}
-                    <p>Medico: <b>{group.doctor.name}</b></p> */}
+                    Horario: {converterData(group.date)} <br />
+                    Medico: {group.doctors[0].name}
                 </CardDescription>
             </CardHeader>
             <CardContent>

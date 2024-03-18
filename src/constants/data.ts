@@ -39,6 +39,14 @@ export type Paciente = {
   role: string;
 };
 
+export type Turma = {
+  id: number;
+  name: string;
+  teste: string;
+};
+
+
+
 export const navItems: NavItem[] = [
   {
     title: "Dashboard",
@@ -63,5 +71,11 @@ export const navItems: NavItem[] = [
     href: "/dashboard/medicos",
     icon: "user",
     label: "medicos",
+  },
+  {
+    title: "Atendimentos",
+    href: "/dashboard/turmas",
+    icon: "user",
+    label: "turmas",
   }
 ];

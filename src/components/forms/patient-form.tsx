@@ -83,7 +83,7 @@ export default function PatientForm({ editPage }: { editPage?: any}) {
 
 
     const onSubmit = async (data: PatientFormValues) => {
-        const url = editPage ? `http://localhost:8081/patient/${editPage.id}` : "http://localhost:8081/patient";
+        const url = editPage ? `https://gestao-clinica-api-production.up.railway.app/patient/${editPage.id}` : "https://gestao-clinica-api-production.up.railway.app/patient";
 
         const method = editPage ? "PUT" : "POST";
 

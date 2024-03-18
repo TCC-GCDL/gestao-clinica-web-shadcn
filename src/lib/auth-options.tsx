@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
               password: { label: "password", type: "password" },
             },
             async authorize(credentials, req) {
-              const response = await fetch("http://localhost:8081/auth/login", {
+              const response = await fetch("https://gestao-clinica-api-production.up.railway.app/auth/login", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

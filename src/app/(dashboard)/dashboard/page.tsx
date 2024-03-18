@@ -1,90 +1,43 @@
-'use client';
-
-import BreadCrumb from "@/components/breadcrumb";
 import { CardGroup } from "@/components/card-group";
 import { Heading } from "@/components/ui/heading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { authOptions } from "@/lib/auth-options";
+import { get } from "http";
+import { getServerSession } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-const data = {
-    "name": "Grupo 1",
-    "hour": "10:00",
-    "doctor": {
-        "name": "Dr. Fulano"
-    },
-    "patients": [
-        {
-            "name": "Fulano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Beltrano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Ciclano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Fulano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Beltrano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Ciclano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Fulano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Beltrano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        },
-        {
-            "name": "Ciclano",
-            "phone": "777777777777",
-            "email": "Vasco"
-        }
-    ]
 
+async function getData(): Promise<any> {
+    const session = await getServerSession(authOptions);
+
+    const response = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session?.token
+        }
+    })
+    
+    
+    return response.json().then((data) => {
+        return data;
+    });
+    
 }
 
-const turmas = [
-    data, data, data, data
-]
 
-export default function DashboardPage() {
 
-    const { data: session } = useSession();
 
-    useEffect(() => {
-        if (session?.expires_at) {
+export default async function DashboardPage() {
+    
+    const turmas = await getData().then((data) => {
+        return data.content;
+    });
 
-            var dateString = session.expires_at;
-
-            var dateExp = new Date(dateString);
-
-            if (Number(dateExp) < Date.now()) {
-                signOut();
-            }
-        }
-    }, [session]);
-
+    
+    
 
     return (
         <>
@@ -97,7 +50,7 @@ export default function DashboardPage() {
                     />
                 </div>
                 <Separator />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                 {turmas && turmas.map((turma: any, index: any) => (
                     <CardGroup key={index} group={turma} />
                 ))}
