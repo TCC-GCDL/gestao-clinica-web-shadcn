@@ -8,7 +8,7 @@ import { authOptions } from "@/lib/auth-options";
 async function getPatient(patientId: string) {
   try {
     const session = await getServerSession(authOptions);
-    const response = await fetch(`http://localhost:8081/patient/${patientId}`, {
+    const response = await fetch(`https://gestao-clinica-api-production.up.railway.app/patient/${patientId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

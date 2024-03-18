@@ -47,7 +47,7 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
   }, []);
 
   const getPatients = async () => {
-    await fetch('http://localhost:8081/patient', {
+    await fetch('https://gestao-clinica-api-production.up.railway.app/patient', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
   }
 
   const handlePatientChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    await fetch(`http://localhost:8081/patient?` + (event.target.value ? `&name=${event.target.value}` : ""), {
+    await fetch(`https://gestao-clinica-api-production.up.railway.app/patient?` + (event.target.value ? `&name=${event.target.value}` : ""), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
   };
 
   const addPatient = async (patient: any) => {
-    await fetch(`http://localhost:8081/group-medical-care/${data.id}/add-patient/${patient.id}`, {
+    await fetch(`https://gestao-clinica-api-production.up.railway.app/group-medical-care/${data.id}/add-patient/${patient.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

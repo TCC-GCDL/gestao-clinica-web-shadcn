@@ -16,7 +16,7 @@ type paramsProps = {
 async function getData(page: number, pageLimit: number, name: string | null): Promise<any> {
     const session = await getServerSession(authOptions);
 
-    const response = await fetch(`http://localhost:8081/doctors?page=${page - 1}&limit=${pageLimit} ` + (name ? `&name=${name}` : ""), {
+    const response = await fetch(`https://gestao-clinica-api-production.up.railway.app/doctors?page=${page - 1}&limit=${pageLimit} ` + (name ? `&name=${name}` : ""), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

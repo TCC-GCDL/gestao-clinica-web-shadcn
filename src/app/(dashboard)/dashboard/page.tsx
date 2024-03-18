@@ -12,7 +12,7 @@ import { useEffect } from "react";
 async function getData(): Promise<any> {
     const session = await getServerSession(authOptions);
 
-    const response = await fetch('http://localhost:8081/group-medical-care', {
+    const response = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

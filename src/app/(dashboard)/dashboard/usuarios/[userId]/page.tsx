@@ -9,7 +9,7 @@ import UserForm from "@/components/forms/user-form";
 async function getUser(userId: string) {
   try {
     const session = await getServerSession(authOptions);
-    const response = await fetch(`http://localhost:8081/users/${userId}`, {
+    const response = await fetch(`https://gestao-clinica-api-production.up.railway.app/users/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

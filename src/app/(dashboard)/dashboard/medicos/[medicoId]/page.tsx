@@ -9,7 +9,7 @@ import DoctorForm from "@/components/forms/doctor-form";
 async function getDoctor(medicoId: string) {
   try {
     const session = await getServerSession(authOptions);
-    const response = await fetch(`http://localhost:8081/doctors/${medicoId}`, {
+    const response = await fetch(`https://gestao-clinica-api-production.up.railway.app/doctors/${medicoId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
