@@ -13,6 +13,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Turma } from "@/constants/data";
 import { toast } from "sonner";
 import { on } from "events";
+import { UserRoundMinus, UserRoundPlus } from "lucide-react";
 
 interface CellActionProps {
   data: Turma;
@@ -98,7 +99,7 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
     })
       .then(data => {
         setPatients(data.content);
-        console.log(data.content);
+        console.log("Pacientes: " + data.content);
       })
       .catch(error => {
         console.error('Erro:', error);
@@ -128,6 +129,28 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
     
   }
 
+  const removePatient = async (patient: any) => {
+    await fetch(`https://gestao-clinica-api-production.up.railway.app/group-medical-care/${data.id}/remove-patient/${patient.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session?.token
+      },
+      body: JSON.stringify(patient)
+    }).then(response => {
+      if (!response.ok) {
+        toast.error(response.json().then(data => data.userMessage), {
+          position: 'top-right',
+        });        
+      } else {
+        toast.success('Paciente removido com sucesso', {
+          position: 'top-right',
+        });
+        onClose();
+      }   
+    })
+  }
+
   return (
     <Modal
       title="Adicionar paciente"
@@ -147,7 +170,10 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
             return (
                 <div className="flex justify-between" key={patient.id}>
                   <p>{patient.firstName + " " + patient.lastName}</p>
-                  <Button variant="outline" onClick={() => addPatient(patient)}>Adicionar</Button>
+                  <div className="gap">
+                    <Button size={"sm"} variant="outline" onClick={() => addPatient(patient)}><UserRoundPlus/></Button>
+                    <Button className="ml-1" size={"sm"} variant="outline" onClick={() => removePatient(patient)}><UserRoundMinus/></Button>
+                  </div>
                 </div>      
             )
           })}
