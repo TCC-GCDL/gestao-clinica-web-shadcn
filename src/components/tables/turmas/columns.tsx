@@ -4,12 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "../turmas/cel-actions"
 import { Turma } from "@/constants/data"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
 import { CellActionAddPatient } from "./add-patient"
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
 
 export const columns: ColumnDef<Turma>[] = [
   {
@@ -34,6 +29,10 @@ export const columns: ColumnDef<Turma>[] = [
   {
     accessorKey: "name",
     header: "NOME",
+  },
+  {
+    accessorKey: "doctor.name",
+    header: "MÉDICO",
   },
   {
     accessorKey: "add-patient",

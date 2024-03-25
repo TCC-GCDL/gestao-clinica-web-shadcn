@@ -6,12 +6,10 @@ export interface GroupParams {
         id: string;
         name: string;
         date: string;
-        doctors: [
-            {
-                id: string;
-                name: string;
-            }
-        ]
+        doctor: {
+            id: string;
+            name: string;
+        }
         patients: {
             name: string;
             phone: string;
@@ -43,7 +41,7 @@ export function CardGroup({group}: GroupParams) {
                 <CardTitle>{group.name}</CardTitle>
                 <CardDescription>                    
                     Horario: {converterData(group.date)} <br />
-                    Medico: {group.doctors[0].name}
+                    Medico: {group.doctor.name}
                 </CardDescription>
             </CardHeader>
             <CardContent>

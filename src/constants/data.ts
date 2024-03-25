@@ -9,11 +9,11 @@ export type Usuario = {
   cidade: string;
   cpf: string;
   genero: string;
-  dataDeNascimento?: string; // Pode ser uma string para a data
+  dataDeNascimento?: string;
   cep: string;
   rua: string;
   numero: number;
-  complemento?: string; // Pode ser opcional
+  complemento?: string;
   bairro: string;
   estado: string;
   email: string;
@@ -28,11 +28,11 @@ export type Paciente = {
   cidade: string;
   cpf: string;
   genero: string;
-  dataDeNascimento?: string; // Pode ser uma string para a data
+  dataDeNascimento?: string;
   cep: string;
   rua: string;
   numero: number;
-  complemento?: string; // Pode ser opcional
+  complemento?: string;
   bairro: string;
   estado: string;
   email: string;
@@ -41,8 +41,7 @@ export type Paciente = {
 
 export type Turma = {
   id: number;
-  name: string;
-  teste: string;
+  name: string;  
 };
 
 
