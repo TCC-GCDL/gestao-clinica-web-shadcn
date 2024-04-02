@@ -3,7 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { CardGroup } from "./card-group";
-import { getData } from "@/app/(dashboard)/dashboard/page";
+import { getData } from "@/lib/get-data";
+
 
 export default function DashboardContent(props: any) {
     

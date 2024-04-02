@@ -14,7 +14,7 @@ import { Turma } from "@/constants/data";
 import { toast } from "sonner";
 import { on } from "events";
 import { UserRoundMinus, UserRoundPlus } from "lucide-react";
-import { getData } from "@/app/(dashboard)/dashboard/page";
+
 
 interface CellActionProps {
   data: Turma;
