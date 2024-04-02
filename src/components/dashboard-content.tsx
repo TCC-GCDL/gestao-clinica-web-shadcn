@@ -9,7 +9,7 @@ import { getData } from "@/lib/get-data";
 export default function DashboardContent(props: any) {
     
     const [turmas, setTurmas] = useState(props.data);
-    const { data: session } = useSession();
+    const { data: session, update } = useSession();
     
     useEffect(() => {
         if (session?.token) {
@@ -17,6 +17,8 @@ export default function DashboardContent(props: any) {
                 setTurmas(data);
             });
         }
+
+        update();
     }, []);  
 
     return (
