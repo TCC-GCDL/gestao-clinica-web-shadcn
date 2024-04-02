@@ -35,7 +35,6 @@ export const CellActionAddPatient = ({data}: CellActionProps) => {
                 data={data}
             />
             <Button size={"sm"} variant={"secondary"} onClick={() => setOpen(true)}>Adicionar paciente</Button>
-            {/* <ArrowBigDownDash onClick={() => setOpen(true)}  size={24} /> */}
         </>
     );
 };

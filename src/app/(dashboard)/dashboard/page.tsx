@@ -1,42 +1,11 @@
-import { CardGroup } from "@/components/card-group";
+import DashboardContent from "@/components/dashboard-content";
 import { Heading } from "@/components/ui/heading";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { authOptions } from "@/lib/auth-options";
-import { get } from "http";
-import { getServerSession } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
-import { useEffect } from "react";
 
 
-async function getData(): Promise<any> {
-    const session = await getServerSession(authOptions);
-
-    const response = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + session?.token
-        }
-    })
-    
-    
-    return response.json().then((data) => {
-        return data;
-    });
-    
-}
-
-
-
-
-export default async function DashboardPage() {
-    
-    const turmas = await getData().then((data) => {
-        return data.content;
-    });
-
-    
+export default  function DashboardPage() {    
     
 
     return (
@@ -50,11 +19,7 @@ export default async function DashboardPage() {
                     />
                 </div>
                 <Separator />
-                <div className="grid md:grid-cols-2 gap-4">
-                {turmas && turmas.map((turma: any, index: any) => (
-                    <CardGroup key={index} group={turma} />
-                ))}
-                </div>                
+                <DashboardContent />               
             </div>
             </ScrollArea>
         </>
