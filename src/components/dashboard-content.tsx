@@ -19,21 +19,22 @@ export default function DashboardContent() {
                 'Authorization': 'Bearer ' + session?.token
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                setTurmas(data.content);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        .then(response => response.json())
+        .then(data => {
+            setTurmas(data.content);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 
     }
 
-    useEffect(() => {
-        if (session) {
+    useEffect(() => {      
+        if (session?.token) {
             getData(session);
         }
-    }, [session, turmas]);
+    }, [session]);
+
     return (
         <>
             <div className="grid md:grid-cols-2 gap-4">
