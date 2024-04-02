@@ -27,6 +27,7 @@ import { useCallback, useEffect, useState } from "react"
 import { usePathname, useSearchParams, useRouter, redirect } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 
 interface DataTableProps<TData, TValue> {
@@ -60,6 +61,7 @@ export function DataTableTurmas<TData, TValue>({
   const per_page = searchParams?.get("limit") ?? "10";
   const perPageAsNumber = Number(per_page);
   const fallbackPerPage = isNaN(perPageAsNumber) ? 10 : perPageAsNumber;
+  const {data: session, update} = useSession();
 
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -148,6 +150,10 @@ export function DataTableTurmas<TData, TValue>({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue])
+
+  useEffect(() => {
+    update();
+  },[])
 
   return (
 
