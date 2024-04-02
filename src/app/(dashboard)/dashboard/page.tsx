@@ -3,10 +3,34 @@ import { Heading } from "@/components/ui/heading";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { authOptions } from "@/lib/auth-options";
+import { getServerSession } from "next-auth";
 
 
-export default  function DashboardPage() {    
+export async function getData(session: any): Promise<any> {
+
+    const result = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session?.token
+        }
+    })
+
+    if (result.ok) {
+        return result.json().then(data => data.content);
+    } else {
+        throw new Error('Error');
+    }
+}
+
+export default async function DashboardPage() {  
     
+    const session = await getServerSession(authOptions);    
+
+    const data = await getData(session).then((data) => {
+        return data;
+    });
 
     return (
         <>
@@ -19,7 +43,7 @@ export default  function DashboardPage() {
                     />
                 </div>
                 <Separator />
-                <DashboardContent />               
+                <DashboardContent  data={data}/>               
             </div>
             </ScrollArea>
         </>
