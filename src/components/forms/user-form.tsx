@@ -38,6 +38,7 @@ export const formSchema = z.object({
     // status: z.enum(["ATIVO", "INATIVO"]),
     email: z.string().email(),
     password: z.string().min(6),
+    role: z.string(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
@@ -68,6 +69,8 @@ export default function UserForm({ editPage }: { editPage?: any}) {
             state: "",
             // status: "ATIVO",
             email: "",
+            password: "",
+            role: "ROLE_ADMINISTRADOR",
         },
     });   
     
@@ -76,6 +79,13 @@ export default function UserForm({ editPage }: { editPage?: any}) {
 
 
     const onSubmit = async (data: UserFormValues) => {
+        console.log(data);
+        
+        data = {
+            ...data,
+            role: "ROLE_ADMINISTRADOR",
+        }
+        
         const url = editPage ? `https://gestao-clinica-api-production.up.railway.app/users/${editPage.id}` : "https://gestao-clinica-api-production.up.railway.app/auth";
 
         const method = editPage ? "PUT" : "POST";
@@ -326,7 +336,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
                                 </FormItem>
                             )}
                         />
-                        {/* <FormField
+                        <FormField
                             control={form.control}
                             name="password"
                             render={({ field }) => (
@@ -338,7 +348,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        /> */}
+                        />
 
                     </div>
 
