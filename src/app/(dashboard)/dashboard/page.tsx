@@ -6,7 +6,13 @@ import { Separator } from "@/components/ui/separator";
 import { authOptions } from "@/lib/auth-options";
 import { getServerSession } from "next-auth";
 
-export async function getGroupToday(session: any): Promise<any> {
+
+
+
+export default async function DashboardPage() {  
+
+    
+    async function getGroupToday(session: any): Promise<any> {
 
     const result = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care/today', {
         method: 'GET',
@@ -22,10 +28,6 @@ export async function getGroupToday(session: any): Promise<any> {
         throw new Error('Error');
     }
 }
-
-
-
-export default async function DashboardPage() {  
     
     const session = await getServerSession(authOptions);    
 

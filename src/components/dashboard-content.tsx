@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { CardGroup } from "./card-group";
 
-import { Separator } from "./ui/separator";
+
 
 export async function getGroupToday(session: any): Promise<any> {
 
