@@ -28,7 +28,6 @@ export default function DoctorForm({ editPage }: { editPage?: any}) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    console.log(editPage);
     
 
     const form = useForm<UserFormValues>({

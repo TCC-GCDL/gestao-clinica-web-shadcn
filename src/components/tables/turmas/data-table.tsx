@@ -116,7 +116,7 @@ export function DataTableTurmas<TData, TValue>({
   }, [pageIndex, pageSize])
 
   const searchValue = table.getColumn(searchKey)?.getFilterValue() as string;
-  console.log(searchValue);
+
   
 
   useEffect(() => {

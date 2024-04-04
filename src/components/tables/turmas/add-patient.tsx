@@ -1,6 +1,5 @@
 "use client";
 import { AddPatientModalModal } from "@/components/modals/add-patient-modal";
-import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,

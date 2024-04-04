@@ -64,7 +64,7 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
       })
       .then(data => {
         setPatients(data.content);
-        console.log(data.content);
+
 
 
 
@@ -100,7 +100,7 @@ export const AddPatientModalModal: React.FC<AlertModalProps> = ({
     })
       .then(data => {
         setPatients(data.content);
-        console.log("Pacientes: " + data.content);
+
       })
       .catch(error => {
         console.error('Erro:', error);

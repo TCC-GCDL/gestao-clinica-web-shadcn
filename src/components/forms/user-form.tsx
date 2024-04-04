@@ -48,7 +48,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    console.log(editPage);
+
     
 
     const form = useForm<UserFormValues>({
@@ -79,7 +79,7 @@ export default function UserForm({ editPage }: { editPage?: any}) {
 
 
     const onSubmit = async (data: UserFormValues) => {
-        console.log(data);
+
         
         data = {
             ...data,

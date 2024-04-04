@@ -49,7 +49,6 @@ export default async function TurmasPage({ searchParams }: paramsProps) {
 
     const pageCount = Math.ceil(totalUsers / pageLimit);
 
-    console.log(data);
     
 
     return (

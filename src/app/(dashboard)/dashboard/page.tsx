@@ -4,8 +4,24 @@ import { Heading } from "@/components/ui/heading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { authOptions } from "@/lib/auth-options";
-import { getData } from "@/lib/get-data";
 import { getServerSession } from "next-auth";
+
+export async function getGroupToday(session: any): Promise<any> {
+
+    const result = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care/today', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session?.token
+        }
+    })
+
+    if (result.ok) {
+        return result.json().then(data => data);
+    } else {
+        throw new Error('Error');
+    }
+}
 
 
 
@@ -13,7 +29,7 @@ export default async function DashboardPage() {
     
     const session = await getServerSession(authOptions);    
 
-    const data = await getData(session).then((data) => {
+    const data = await getGroupToday(session).then((data) => {
         return data;
     });
 

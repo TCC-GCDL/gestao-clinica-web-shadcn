@@ -35,6 +35,10 @@ export const columns: ColumnDef<Turma>[] = [
     header: "MÉDICO",
   },
   {
+    accessorKey: "shift",
+    header: "TURNO",
+  },
+  {
     accessorKey: "add-patient",
     header: () => <div className="text-right">ADICIONAR PACIENTE</div>,
     cell: ({ row }) => <div className="text-right"><CellActionAddPatient data={row.original} /></div>,

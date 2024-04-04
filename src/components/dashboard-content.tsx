@@ -3,8 +3,25 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { CardGroup } from "./card-group";
-import { getData } from "@/lib/get-data";
 
+import { Separator } from "./ui/separator";
+
+export async function getGroupToday(session: any): Promise<any> {
+
+    const result = await fetch('https://gestao-clinica-api-production.up.railway.app/group-medical-care/today', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session?.token
+        }
+    })
+
+    if (result.ok) {
+        return result.json().then(data => data);
+    } else {
+        throw new Error('Error');
+    }
+}
 
 export default function DashboardContent(props: any) {
     
@@ -13,7 +30,7 @@ export default function DashboardContent(props: any) {
     
     useEffect(() => {
         if (session?.token) {
-            getData(session).then((data) => {
+            getGroupToday(session).then((data) => {
                 setTurmas(data);
             });
         }
@@ -23,10 +40,21 @@ export default function DashboardContent(props: any) {
 
     return (
         <>
+            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                Manha
+            </h3>
             <div className="grid md:grid-cols-2 gap-4">
-                {turmas && turmas.map((turma: any, index: any) => (
-                    <CardGroup key={index} group={turma} />
-                ))}
+                {turmas ? turmas.map((turma: any, index: any) => (
+                    turma.shift === "MANHA" ? <CardGroup key={index} group={turma} /> : null
+                )) : <p>Não há turmas para hoje.</p>}
+            </div>
+            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                Tarde
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+                {turmas ? turmas.map((turma: any, index: any) => (
+                    turma.shift === "TARDE" ? <CardGroup key={index} group={turma} /> : null
+                )) : <p>Não há turmas para hoje.</p>}
             </div>
         </>
     );

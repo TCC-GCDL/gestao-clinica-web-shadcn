@@ -16,33 +16,33 @@ export const formSchema = z.object({
     userId: z.string(),
     doctorId: z.string(),
     date: z.string(),
+    shift: z.enum(["MANHA", "TARDE"])
 });
 
 type GroupFormValues = z.infer<typeof formSchema>;
 
-export default function GroupForm({ doctors }: { doctors?: any[] }) {   
+export default function GroupForm({ doctors }: { doctors?: any[] }) {
 
     const { data: session } = useSession();
     const router = useRouter();
-
-
-    console.log(doctors);
-    
     
 
     const form = useForm<GroupFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues:  {
+        defaultValues: {
             userId: "",
             doctorId: "",
             date: "",
+            shift: "MANHA",
         },
     });
 
     const onSubmit = async (data: GroupFormValues) => {
 
         const formattedDate = new Date(data.date).toISOString();
-        
+
+        console.log(data);
+
         await fetch("https://gestao-clinica-api-production.up.railway.app/group-medical-care", {
             method: "POST",
             headers: {
@@ -52,7 +52,8 @@ export default function GroupForm({ doctors }: { doctors?: any[] }) {
             body: JSON.stringify({
                 userId: session?.usuario.id,
                 doctorId: data.doctorId,
-                date: formattedDate, // Send the formatted date
+                date: formattedDate,
+                shift: data.shift
             })
         }).then((response) => {
             if (response.ok) {
@@ -64,22 +65,19 @@ export default function GroupForm({ doctors }: { doctors?: any[] }) {
         });
     }
 
-
-
-
     return (
         <>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <div className="md:grid md:grid-cols-3 gap-8">
-                    <FormField
+                        <FormField
                             control={form.control}
                             name="doctorId"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Médico</FormLabel>
                                     <FormControl>
-                                        <Select                                            
+                                        <Select
                                             onValueChange={field.onChange}
                                             value={field.value}>
                                             <SelectTrigger>
@@ -114,15 +112,37 @@ export default function GroupForm({ doctors }: { doctors?: any[] }) {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="shift"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Turno</FormLabel>
+                                    <FormControl>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione o turno" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="MANHA">Manhã</SelectItem>
+                                                <SelectItem value="TARDE">Tarde</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                      
+
                     </div>
 
 
                     <Button className="ml-auto" type="submit">
                         Cadastrar
                     </Button>
-                    
+
                 </form>
             </Form>
         </>

@@ -6,6 +6,7 @@ export interface GroupParams {
         id: string;
         name: string;
         date: string;
+        shift: string;
         doctor: {
             id: string;
             name: string;
@@ -40,7 +41,8 @@ export function CardGroup({group}: GroupParams) {
             <CardHeader>
                 <CardTitle>{group.name}</CardTitle>
                 <CardDescription>                    
-                    Horario: {converterData(group.date)} <br />
+                    Dia: {converterData(group.date)} <br />
+                    Turno: {group.shift} <br />
                     Medico: {group.doctor.name}
                 </CardDescription>
             </CardHeader>

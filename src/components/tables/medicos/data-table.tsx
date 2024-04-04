@@ -114,7 +114,7 @@ export function DataTableMedico<TData, TValue>({
   }, [pageIndex, pageSize])
 
   const searchValue = table.getColumn(searchKey)?.getFilterValue() as string;
-  console.log(searchValue);
+
   
 
   useEffect(() => {
